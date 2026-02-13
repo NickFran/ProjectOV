@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../lib/leaflet/leaflet.css"/>
+    <link rel="stylesheet" href="./style/map.css">
+    <script src="../lib/leaflet/leaflet.js"></script>
+</head>
+<body>
+    
+    <div id="map" style="width: 100%; height: 100%;"></div>
+</body>
+<script>
+    // Beginner-friendly inline script that loads LatLong.csv
+    document.addEventListener('DOMContentLoaded', function () {
+        // Create the map and set a default view
+        var map = L.map('map').setView([0, 0], 2);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Path to CSV (relative to this file)
+        var csvPath = '../Storage/LatLong.csv';
+
+        // Maximum markers to add (safety to prevent long loops)
+        var maxMarkers = 100;
+
+        // Fetch and parse the CSV
+        fetch(csvPath)
+            .then(function (response) {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text();
+            })
+            .then(function (text) {
+                var lines = text.trim().split('\n');
+                if (lines.length <= 1) return; // no data rows
+
+                var added = 0;
+                // start at 1 to skip header
+                for (var i = 1; i < lines.length; i++) {
+                    if (added >= maxMarkers) break; // stop after maxMarkers
+
+                    // Only take the first coordinate in each block of 100 (skip 99)
+                    //if ((i - 1) % 500 !== 0) continue;
+
+                    var line = lines[i].trim();
+                    if (!line) continue; // skip empty lines
+
+                    var parts = line.split(',');
+                    var lat = parseFloat(parts[0]);
+                    var lon = parseFloat(parts[1]);
+
+                    if (isNaN(lat) || isNaN(lon)) continue; // skip invalid
+
+                    // add marker and count it
+                    L.marker([lat, lon]).addTo(map);
+                    added += 1;
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load CSV:', err);
+            });
+    });
+</script>
+</html>
