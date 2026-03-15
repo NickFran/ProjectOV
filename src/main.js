@@ -24,7 +24,7 @@ function createWindow() {
         }
     });
     win.loadURL(url.format({
-        pathname: path.join(__dirname, 'nav.html'),
+        pathname: path.join(__dirname, '4-traceTest.html'),
         protocol: 'file:',
         slashes: true
     }));

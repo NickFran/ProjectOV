@@ -4,6 +4,7 @@
     "start": "electron ."
   },
   "dependencies": {
-    "electron": "^40.3.0"
+    "electron": "^40.3.0",
+    "three": "^0.183.2"
   }
 }
