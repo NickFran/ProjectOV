@@ -6,7 +6,8 @@ ncPrefix = "../Storage/nc/GL_PR_PF_"
 ncSuffix = ".nc"
 WMOArray = [
     "3902331",
-    "6990668"
+    "6990668",
+    "6990526"
 ]
 
 Lats=[]

@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "electron": "^40.3.0",
+    "protobufjs": "^8.0.0",
     "three": "^0.183.2"
   }
 }
