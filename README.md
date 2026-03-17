@@ -1,4 +1,4 @@
-# Ocean Voxels
+# Project Ocean Voxels
 
 
 ![First Image](/media/GEBCO%203D.png)
