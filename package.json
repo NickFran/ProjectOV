@@ -1,7 +1,8 @@
 {
+  "type": "module",
   "main": "./src/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron --js-flags=\"--max-old-space-size=4096\" ."
   },
   "dependencies": {
     "electron": "^40.3.0",

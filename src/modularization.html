@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style/style.css">
+    <script type="importmap">
+{
+  "imports": {
+    "three": "../node_modules/three/build/three.module.js",
+    "three/addons/": "../node_modules/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+  <div class="container">
+    <div class="top"><h1>3D SIMULATION</h1></div>
+    <div class="main">
+      <div class="menu">
+        <details id="GliderDropDown">
+            <summary>Objects</summary>
+                <ul class="objectList" id="objectList">
+                </ul>
+        </details>
+        <details id="TileDropDown">
+          <summary>Details</summary>
+              <ul class="detailsList" id="detailsList">
+              </ul>
+      </div>
+      <div class="viewport" id="viewport"></div>
+    </div>
+    <div class="bottom"></div>
+    <div class="controlContainer">
+      <button id="Refresh">Refresh</button>
+      <button id="temp">?</button>
+    </div>
+  </div>
+</body>
+<script type="module">
+    import * as threeDeps from "./deps/threeDeps.js";
+    threeDeps.initScreen();
+    threeDeps.initCamera();
+    //threeDeps.setCameraPosition(-3563191.5, 593, 5683000);
+    
+    threeDeps.animate();
+    threeDeps.renderAxisHelper();
+    threeDeps.includeLights();
+    //threeDeps.importGEBCOTiles();
+    threeDeps.importSubThingy();
+    threeDeps.printSceneInfo();
+    const cone = new threeDeps.FrustrumRayTracer(threeDeps.scene, threeDeps.camera);
+    cone.init(16);
+    const rays = [];
+    cone.startSimulation(5, 1.0, (start, end) => {
+      const startWorld = cone.cone.localToWorld(start.clone());
+      const endWorld = cone.cone.localToWorld(end.clone());
+      let rayInstance = new threeDeps.acousticRay(startWorld, endWorld, {});
+      rayInstance.init();
+      rayInstance.renderLine();
+      rays.push(rayInstance); // Store reference so lines persist
+    });
+
+    document.getElementById('Refresh').addEventListener('click', () => {
+      threeDeps.addChildrenToMenu();
+      console.log("Menu refreshed");
+    });
+
+    threeDeps.testLine();
+</script>
+</html>

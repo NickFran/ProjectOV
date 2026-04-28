@@ -53,11 +53,6 @@ elevations = gaussian_filter(elevations, sigma=1)
 
 ## No scaling: use raw elevation values (meters)
 
-# Calculate and print the depth range
-min_elevation = np.min(elevations)
-max_elevation = np.max(elevations)
-print(f"Elevation range: {min_elevation:.2f} meters to {max_elevation:.2f} meters")
-
 # Write OBJ file centered at origin (Y-up convention)
 obj_path = "../Storage/bathymetry.obj"
 
@@ -85,69 +80,21 @@ with open(obj_path, 'w') as f:
             f.write(f"f {tl} {bl} {tr}\n")
             f.write(f"f {tr} {bl} {br}\n")
 
+# Verify mesh alignment with bounding box (including potential padding)
+print(f"Expected latitude range: {lat_min:.6f} to {lat_max:.6f}")
+print(f"Expected longitude range: {lon_min:.6f} to {lon_max:.6f}")
+print(f"Actual mesh latitude range: {lats[0]:.6f} to {lats[-1]:.6f}")
+print(f"Actual mesh longitude range: {lons[0]:.6f} to {lons[-1]:.6f}")
+
+# Check if the mesh range matches the expected range (with padding tolerance)
+padding_lat = abs(lats[0] - lat_min), abs(lats[-1] - lat_max)
+padding_lon = abs(lons[0] - lon_min), abs(lons[-1] - lon_max)
+
+if padding_lat[0] > 1e-6 or padding_lat[1] > 1e-6 or padding_lon[0] > 1e-6 or padding_lon[1] > 1e-6:
+    print("Warning: Mesh edges do not perfectly align with the bounding box. Padding may be applied.")
+else:
+    print("Mesh edges align perfectly with the bounding box.")
+
 print(f"\nOBJ saved to {obj_path}")
 print(f"Vertices: {n_lat * n_lon}")
 print(f"Faces: {(n_lat - 1) * (n_lon - 1) * 2}")
-
-# Number of tiles in each dimension
-num_tiles_lat = 10
-num_tiles_lon = 10
-
-# Adjust tile sizes dynamically to ensure all tiles have consistent dimensions
-tile_lat_size = n_lat // num_tiles_lat
-tile_lon_size = n_lon // num_tiles_lon
-
-# Use a fixed latitude for longitude scaling
-fixed_lat_rad = np.radians((lat_min + lat_max) / 2)
-
-# Adjust grid slicing to include overlapping edges
-for tile_i in range(num_tiles_lat):
-    for tile_j in range(num_tiles_lon):
-        # Define the range of indices for this tile, including overlap
-        lat_start = tile_i * tile_lat_size
-        lat_end = (tile_i + 1) * tile_lat_size + 1 if tile_i < num_tiles_lat - 1 else n_lat
-        lon_start = tile_j * tile_lon_size
-        lon_end = (tile_j + 1) * tile_lon_size + 1 if tile_j < num_tiles_lon - 1 else n_lon
-
-        # Extract the subset of data for this tile
-        tile_lats = lats[lat_start:lat_end]
-        tile_lons = lons[lon_start:lon_end]
-        tile_elevations = elevations[lat_start:lat_end, lon_start:lon_end]
-
-        # Create a unique filename for the tile
-        tile_filename = f"../Storage/tiles/tile_{tile_i}_{tile_j}.obj"
-
-        # Write the tile to an OBJ file
-        with open(tile_filename, 'w') as f:
-            # Write vertices
-            for i in range(tile_lats.shape[0]):
-                for j in range(tile_lons.shape[0]):
-                    lat_here = tile_lats[i]
-                    lon_m = tile_lons[j] * 111000 * np.cos(fixed_lat_rad)  # Use fixed latitude for scaling
-                    elev_m = float(tile_elevations[i, j])
-                    lat_m = tile_lats[i] * 111000
-                    f.write(f"v {lon_m:.2f} {elev_m:.2f} {lat_m:.2f}\n")
-
-            # Write faces
-            for i in range(tile_lats.shape[0] - 1):
-                for j in range(tile_lons.shape[0] - 1):
-                    tl = i * tile_lons.shape[0] + j + 1        # top-left
-                    tr = i * tile_lons.shape[0] + (j + 1) + 1  # top-right
-                    bl = (i + 1) * tile_lons.shape[0] + j + 1  # bottom-left
-                    br = (i + 1) * tile_lons.shape[0] + (j + 1) + 1  # bottom-right
-                    f.write(f"f {tl} {bl} {tr}\n")
-                    f.write(f"f {tr} {bl} {br}\n")
-
-        print(f"Tile saved: {tile_filename}")
-
-# Verify spacing between vertices
-lat_spacing = (lat_max - lat_min) / (n_lat - 1) * km_per_deg_lat
-lon_spacing = (lon_max - lon_min) / (n_lon - 1) * km_per_deg_lon
-print(f"Latitude spacing: {lat_spacing:.2f} meters")
-print(f"Longitude spacing: {lon_spacing:.2f} meters")
-
-# Check if spacing matches target_km
-if abs(lat_spacing - target_km * 1000) > 1e-2 or abs(lon_spacing - target_km * 1000) > 1e-2:
-    print("Warning: Vertex spacing does not match the target spacing of 500 meters.")
-else:
-    print("Vertex spacing matches the target spacing of 500 meters.")

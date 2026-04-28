@@ -1,0 +1,1 @@
+* add a callback to the for loop for expansion, this will be the spawning of the rays

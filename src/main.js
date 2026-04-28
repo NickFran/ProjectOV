@@ -1,11 +1,16 @@
 console.log("Working");
 
-const { create } = require('domain');
-const electron = require('electron');
+import { create } from 'domain';
+import electron from 'electron';
+import path from 'path';
+import url from 'url';
+import { fileURLToPath } from 'url';
+
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const path = require('path');
-const url = require('url');
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // more secure
 // electron.ipcMain.handle("test-thing", async (_, msg) => {
@@ -24,7 +29,7 @@ function createWindow() {
         }
     });
     win.loadURL(url.format({
-        pathname: path.join(__dirname, '4-traceTest.html'),
+        pathname: path.join(__dirname, 'modularization.html'),
         protocol: 'file:',
         slashes: true
     }));

@@ -7,6 +7,7 @@ node_modules/
 # IDE/editor settings
 .vscode/
 
+Storage/
 storage/SubThingy.fbx
 storage/bathymetry.obj
 storage/gebco_2025_n90.0_s45.0_w-80.0_e5.0.nc

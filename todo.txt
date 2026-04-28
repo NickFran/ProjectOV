@@ -1,2 +1,1 @@
-The terrain is offset.
-The origin in THREE is the center of the map, this is breaking localization, set it back to what we had before.
+* get rid of smoothing on the surface

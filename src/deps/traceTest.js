@@ -3,6 +3,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
+
+// Get neighboring coordinates (6-connected)
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x003f67 );
 const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.001, 100000 );
@@ -159,7 +162,7 @@ loader.load(
             }
         });
         scene.add( obj );
-        obj.scale.set( .00001, .001, .00001 ); // Scale up to match the FBX
+        obj.scale.set( .00001, .0001, .00001 ); // Scale up to match the FBX
 
         console.log( 'OBJ loaded' );
     },

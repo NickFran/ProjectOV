@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.top, .bottom{
+    width: 100%;
+    height: 40px;
+    background-color: rgb(125, 162, 196);
+    flex-shrink: 0;
+}.top{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    flex: 1;
+    height: 500px;
+}
+
+.menu {
+    width: 180px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    flex-shrink: 0;
+}
+
+.viewport {
+    background-color: #eee;
+    overflow: hidden;
+    position: relative;
+    flex: 1;
+}
+
+.objectList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    max-height: 300px; /* or height: 100%; if parent is sized */
+}.objectListItem{
+    padding: 5px;
+    border-bottom: 1px solid #555;
+    cursor: pointer;
+}.objectListItem:hover {
+    background-color: #555;
+}.objectListItem.active {
+    background-color: #777;
+}
+
+
+.detailOptions{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    
+}.detailOptions input {
+    width: 101px;
+    padding: 5px;
+    border: 1px solid #555;
+    border-radius: 3px;
+    z-index: 1;
+}.detailOptions p{
+    color: white;
+    width: 100%;
+    margin-right: auto;
+}

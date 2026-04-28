@@ -16,14 +16,14 @@ function unpackCoordinate(key) {
     return { x, y, z };
 }
 
-// Example:
-const myKey = packCoordinate(125000, 450, 88000); 
-// myKey will be a single massive number like 34359792000...
+// // Example:
+// const myKey = packCoordinate(125000, 450, 88000); 
+// // myKey will be a single massive number like 34359792000...
 
-console.log("Packed Key:", myKey.toString()); // Display the packed key
+// console.log("Packed Key:", myKey.toString()); // Display the packed key
 
-const unpacked = unpackCoordinate(myKey);
-console.log("Unpacked Coordinates:", unpacked); // Should show { x: 125000, y: 450, z: 88000 }
+// const unpacked = unpackCoordinate(myKey);
+// console.log("Unpacked Coordinates:", unpacked); // Should show { x: 125000, y: 450, z: 88000 }
 
 
 
@@ -102,3 +102,19 @@ function metersToDegrees(meters, isLon = false, lat = 0) {
         return meters / 111000;
     }
 }
+
+function initScreen(){
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0x003f67 );
+    const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.001, 100000 );
+    
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+}
+
+module.exports = {
+    packCoordinate,
+    unpackCoordinate,
+    initScreen
+};
